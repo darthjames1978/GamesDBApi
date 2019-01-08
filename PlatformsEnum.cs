@@ -1,0 +1,40 @@
+﻿namespace GamesDBApi
+{
+    public enum PlatformsEnum
+    {
+        NintendoGamecube = 2,
+        Nintendo64 = 3,
+        NintendoGameboy = 4,
+        NintendoGameboyAdvance = 5,
+        SuperNintendo = 6,
+        NintendoEntertainmentSystem = 7,
+        NintendoDS = 8,
+        NintendoWii = 9,
+        SonyPlatstation = 10,
+        PlaystationPortable = 13,
+        SegaDreamcast = 16,
+        SegaSaturn = 17,
+        SegaGenesis = 18,
+        SegaGamegear = 20,
+        SegaCD = 21,
+        Arcade = 23,
+        NeoGeo = 24,
+        SegaJaguar = 28,
+        SegaJaguarCD = 29,
+        Sega32X = 33,
+        TurboGrafx16 = 34,
+        SegaMastersystem = 35,
+        SegaMegadrive = 36,
+        GameboyColor = 41,
+        Nintendo3DS = 4912,
+        VirtualBoy = 4918,
+        NeoGeoPocket = 4922,
+        NeoGeoPocketColor = 4923,
+        WonderSwan = 4925,
+        WonderSwanColor = 4926,
+        PCFX = 4930,
+        SG1000 = 4949,
+        TurbografxCD = 4955,
+        NeoGeoCD = 4956
+    }
+}

@@ -1,6 +1,7 @@
 ﻿// Licensed under the MIT license
 
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Web.Http;
@@ -48,6 +49,11 @@ namespace GamesDBApi
         private static readonly string _GAMES_BY_GAME_NAME = "Games/ByGameName?";
 
         /// <summary>
+        /// Platforms API Endpoint
+        /// </summary>
+        private static readonly string _PLATFORMS = "/Platforms?";
+
+        /// <summary>
         /// APIKEY querystring
         /// </summary>
         private static readonly string _API_KEY_FMT = "apikey={0}";
@@ -68,23 +74,32 @@ namespace GamesDBApi
         private static readonly string _GAMES_BY_GAME_NAME_OPTIONAL_FIELDS = "&include=boxart,platform&fields=players,publishers,genres,overview,platform,alternates";
 
         /// <summary>
+        /// Optional fields for Platforms API
+        /// </summary>
+        private static readonly string _PLATFORMS_OPTIONAL_FIELDS = "&fields=icon,console,controller,developer,manufacturer,media,cpu,memory,graphics,sound,maxcontrollers,display,overview,youtube";
+
+        /// <summary>
         /// Initializes GamesDBApi
         /// </summary>
         /// <param name="apiKey">The API Key to use</param>
         /// <returns>True or false</returns>
         public bool Initialize(string apiKey)
         {
-            if (!String.IsNullOrEmpty(apiKey))
-            {
-                ApiKey = apiKey;
-                _isInitialized = true;
-            }
-            else
-            {
-                throw new ArgumentException("API Key must not be null");
-            }
 
-            _httpClient = new HttpClient();
+            if (!_isInitialized)
+            {
+                if (!String.IsNullOrEmpty(apiKey))
+                {
+                    ApiKey = apiKey;
+                    _isInitialized = true;
+                }
+                else
+                {
+                    throw new ArgumentException("API Key must not be null");
+                }
+
+                _httpClient = new HttpClient();
+            }
 
             return _isInitialized;
         }
@@ -133,6 +148,49 @@ namespace GamesDBApi
             var jsonResult = await _httpClient.GetStringAsync(uri);
 
             return ByGameName.FromJson(jsonResult);
+        }
+
+        public async Task<Platforms> GetPlatformsAsync(bool includeOptional = false)
+        {
+            if (!IsInitialized())
+            {
+                throw new InvalidOperationException("API is not initialized");
+            }
+
+            var uriString = new StringBuilder();
+            uriString.Append(_BASE_URL);
+            uriString.Append(_PLATFORMS);
+            uriString.Append(String.Format(_API_KEY_FMT, ApiKey));
+
+            if (includeOptional)
+            {
+                uriString.Append(_PLATFORMS_OPTIONAL_FIELDS);
+            }
+
+            var uri = new Uri(uriString.ToString());
+
+            var jsonResult = await _httpClient.GetStringAsync(uri);
+
+            return Platforms.FromJson(jsonResult);
+        }
+
+        public string GetFrontBoxart(Boxart boxart, int gameID)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(boxart.BaseUrl.Original.ToString());
+
+            var shit = boxart.Data[gameID.ToString()];
+            var front = shit.FirstOrDefault(x => x.Side == Side.Front);
+
+            string image = "";
+            if (null != front)
+            {
+                image = front.Filename;
+            }
+
+            sb.Append(image);
+
+            return sb.ToString();
         }
     }
 }

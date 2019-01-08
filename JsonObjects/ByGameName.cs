@@ -163,12 +163,12 @@
 
     public partial class ByGameName
     {
-        public static ByGameName FromJson(string json) => JsonConvert.DeserializeObject<ByGameName>(json, XSlideShow.Converter.Settings);
+        public static ByGameName FromJson(string json) => JsonConvert.DeserializeObject<ByGameName>(json, Converter.Settings);
     }
 
     public static class Serialize
     {
-        public static string ToJson(this ByGameName self) => JsonConvert.SerializeObject(self, XSlideShow.Converter.Settings);
+        public static string ToJson(this ByGameName self) => JsonConvert.SerializeObject(self, Converter.Settings);
     }
 
     internal static class Converter
